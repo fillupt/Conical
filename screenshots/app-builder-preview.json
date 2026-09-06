@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Conoid — Jackson Cross Cylinder",
+      "hasCanvas": false,
+      "bodyTextLen": 1716,
+      "bodyTextHash": "9e87a1447599e920a17a9d657d5ff7363f7fa3c3b54ede5de0bb9fa48795ece2",
+      "bodyTextPrefix": "JACKSON CROSS CYLINDER Conoid RESIDUAL+0.46 DS / -0.91 DC × 040 ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Conoid — Jackson Cross Cylinder",
+      "hasCanvas": false,
+      "bodyTextLen": 1606,
+      "bodyTextHash": "c29fc677ebf4b4ccad25dc9d749cf537b0eb9ddd87eb9ac5de37b39f51f52cd6",
+      "bodyTextPrefix": "JACKSON CROSS CYLINDER Conoid RESIDUAL+0.46 DS / -0.91 DC × 040 ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}
