@@ -11,6 +11,7 @@ import {
   parseAppEnv,
   projectRoot,
   readAppEnv,
+  spawnOptions,
 } from "./with-app-env.mjs";
 
 const execFileAsync = promisify(execFile);
@@ -73,6 +74,20 @@ test("vite loadEnv resolves the wrapped value", () => {
   assert.equal(merged.VITE_AUTH_ENABLED, "false");
 });
 
+test("windows child processes use the shell so local .cmd binaries resolve", () => {
+  const originalPlatform = process.platform;
+  Object.defineProperty(process, "platform", { value: "win32", configurable: true });
+  try {
+    assert.deepEqual(spawnOptions({ PATH: "C:/Windows/System32" }), {
+      stdio: "inherit",
+      env: { PATH: "C:/Windows/System32" },
+      shell: true,
+    });
+  } finally {
+    Object.defineProperty(process, "platform", { value: originalPlatform, configurable: true });
+  }
+});
+
 test("the wrapped command runs with the app env applied", async () => {
   const { stdout } = await execFileAsync(process.execPath, [
     WRAPPER,
@@ -81,6 +96,27 @@ test("the wrapped command runs with the app env applied", async () => {
     PRINT_FLAG,
   ]);
   assert.equal(stdout, "false");
+});
+
+test("the windowed shell resolves .cmd binaries for spawned child processes", () => {
+  const originalPlatform = process.platform;
+  const originalComSpec = process.env.ComSpec;
+  Object.defineProperty(process, "platform", { value: "win32", configurable: true });
+  process.env.ComSpec = "C:/Windows/System32/cmd.exe";
+  try {
+    assert.deepEqual(spawnOptions({ PATH: "C:/Windows/System32" }), {
+      stdio: "inherit",
+      env: { PATH: "C:/Windows/System32" },
+      shell: "C:/Windows/System32/cmd.exe",
+    });
+  } finally {
+    Object.defineProperty(process, "platform", { value: originalPlatform, configurable: true });
+    if (originalComSpec === undefined) {
+      delete process.env.ComSpec;
+    } else {
+      process.env.ComSpec = originalComSpec;
+    }
+  }
 });
 
 test("the wrapped command sees an explicit override, not the file value", async () => {

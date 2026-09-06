@@ -65,6 +65,14 @@ export function mergeAppEnv(appEnv, processEnv) {
   return { ...appEnv, ...processEnv };
 }
 
+/** Resolve child spawn options so Windows finds `.cmd` / `.ps1` binaries. */
+export function spawnOptions(env) {
+  const options = { stdio: "inherit", env };
+  return process.platform === "win32"
+    ? { ...options, shell: process.env.ComSpec || "cmd.exe" }
+    : options;
+}
+
 /**
  * Translate a child's `exit` `(code, signal)` into this process's exit status.
  *
@@ -111,7 +119,7 @@ function main(argv) {
     process.exit(2);
   }
   const env = mergeAppEnv(readAppEnv(projectRoot()), process.env);
-  const child = spawn(command, args, { stdio: "inherit", env });
+  const child = spawn(command, args, spawnOptions(env));
   // The dev server is long-running and is stopped by signalling this wrapper.
   for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
     process.on(signal, () => child.kill(signal));
