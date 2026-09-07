@@ -19,8 +19,6 @@ export function RxPanel({ which }: { which: Which }) {
   const setSphere = useWorkbench((s) => s.setSphere);
   const setCylinder = useWorkbench((s) => s.setCylinder);
   const setAxis = useWorkbench((s) => s.setAxis);
-  const holdSe = useWorkbench((s) => s.holdSe);
-  const setHoldSe = useWorkbench((s) => s.setHoldSe);
   const matchPatient = useWorkbench((s) => s.matchPatient);
   const zeroCorrection = useWorkbench((s) => s.zeroCorrection);
 
@@ -77,22 +75,7 @@ export function RxPanel({ which }: { which: Which }) {
       </div>
       <p className="mt-2 text-center text-xs text-muted">
         <RxText {...rx} />
-        {isCorrection && holdSe ? (
-          <span className="text-subtle"> · SE held</span>
-        ) : null}
       </p>
-
-      {isCorrection ? (
-        <label className="mt-3 flex items-center gap-2 text-xs text-muted">
-          <input
-            type="checkbox"
-            className="size-4 accent-accent"
-            checked={holdSe}
-            onChange={(e) => setHoldSe(e.target.checked)}
-          />
-          Hold spherical equivalent when cylinder changes
-        </label>
-      ) : null}
 
       <div className={cn("mt-3", cylUnused && "opacity-70")}>
         <AxisDial

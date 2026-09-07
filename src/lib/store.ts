@@ -9,7 +9,6 @@ import {
   clamp,
   snapAxis,
   snapQuarter,
-  sphericalEquivalent,
 } from "@/lib/optics";
 
 export type Preset = {
@@ -87,7 +86,6 @@ type WorkbenchState = {
   jccMode: JccMode;
   jccPower: number;
   jccFlip: 0 | 1;
-  holdSe: boolean;
   showGuide: boolean;
   activePreset: string | null;
   setSphere: (which: Fields, next: number) => void;
@@ -97,7 +95,6 @@ type WorkbenchState = {
   setJccPower: (p: number) => void;
   flipJcc: () => void;
   setJccFlip: (f: 0 | 1) => void;
-  setHoldSe: (v: boolean) => void;
   setShowGuide: (v: boolean) => void;
   applyPreset: (id: string) => void;
   matchPatient: () => void;
@@ -118,7 +115,6 @@ export const useWorkbench = create<WorkbenchState>((set, get) => ({
   jccMode: "axis",
   jccPower: 0.25,
   jccFlip: 0,
-  holdSe: true,
   showGuide: false,
   activePreset: "axis-off",
 
@@ -131,11 +127,7 @@ export const useWorkbench = create<WorkbenchState>((set, get) => ({
   setCylinder: (which, next) => {
     const cur = get()[which];
     const cylinder = clamp(snapQuarter(next), CYL_MIN, CYL_MAX);
-    let sphere = cur.sphere;
-    if (which === "correction" && get().holdSe) {
-      const se = sphericalEquivalent(cur);
-      sphere = snapQuarter(se - cylinder / 2);
-    }
+    const sphere = cur.sphere;
     set({
       [which]: boundRx({ ...cur, sphere, cylinder }),
       activePreset: null,
@@ -152,7 +144,6 @@ export const useWorkbench = create<WorkbenchState>((set, get) => ({
   setJccPower: (jccPower) => set({ jccPower }),
   flipJcc: () => set({ jccFlip: get().jccFlip === 0 ? 1 : 0 }),
   setJccFlip: (jccFlip) => set({ jccFlip }),
-  setHoldSe: (holdSe) => set({ holdSe }),
   setShowGuide: (showGuide) => set({ showGuide }),
 
   applyPreset: (id) => {

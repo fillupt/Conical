@@ -42,8 +42,7 @@ export function Guide() {
             <h3 className="mb-1 font-medium text-fg">Power</h3>
             <p>
               Align the dots with the cylinder axis. If the patient prefers red
-              on axis, add minus cylinder (this bench holds SE, so sphere steps
-              +0.25 for every −0.50 DC). Prefer white on axis: take cylinder
+              on axis, add minus cylinder. Prefer white on axis: take cylinder
               out. Endpoint is equal blur on both flips, with a point focus on
               the retina.
             </p>
