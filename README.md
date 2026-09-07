@@ -51,7 +51,7 @@ This creates a Pages-ready static bundle in `dist/` and writes a `.nojekyll` fil
 
 The project is configured as a static SPA. It uses relative asset paths and hash-based routing so it works correctly from a repository subpath on GitHub Pages.
 
-The repo now includes a GitHub Actions workflow that builds and deploys the generated `dist/` output automatically. If GitHub Pages is configured to serve the repo root instead of the workflow output, the root `index.html` redirects to `./dist/` so the browser does not try to execute raw TypeScript source files.
+The repo includes a GitHub Actions workflow that builds and deploys the generated `dist/` output automatically. The deployed artifact serves the app directly from `dist/index.html`.
 
 Publish the generated `dist/` folder via GitHub Actions or by uploading it directly as the Pages artifact.
 
