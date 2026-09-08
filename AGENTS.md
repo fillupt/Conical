@@ -38,7 +38,7 @@ Use the Pages build as the release artifact:
 npm run build:pages
 ```
 
-That command emits the static bundle into `dist/` and adds `.nojekyll` so GitHub Pages preserves underscore-based asset paths. The repo also includes a Pages deploy workflow that uploads the built artifact automatically.
+That command emits the static bundle into `dist/` and adds `.nojekyll`. Commit the entire `dist/` folder with each release. The Pages workflow uploads this committed artifact without installing dependencies or building on GitHub. Run `npm run typecheck` and `npm run lint` before releasing.
 
 ## Important project rules
 

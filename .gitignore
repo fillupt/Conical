@@ -1,8 +1,5 @@
 node_modules/
-.project_id
-.github_repo
 .env
 .env.*
-.grok/
-.vercel/
-public/__grok/
+.tanstack/
+*.log

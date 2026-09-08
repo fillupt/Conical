@@ -31,6 +31,8 @@ The app is intentionally static so it can be published directly to GitHub Pages 
 
 ## Local development
 
+Use Node.js 22.12 or newer. This repository contains only the static simulator and its build tooling.
+
 ```bash
 npm install
 npm run dev
@@ -42,6 +44,7 @@ Then open the local Vite app in the browser.
 
 ```bash
 npm run typecheck
+npm run lint
 npm run build:pages
 ```
 
