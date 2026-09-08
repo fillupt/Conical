@@ -1,4 +1,4 @@
-name: Deploy static site to GitHub Pages
+name: Deploy prebuilt site to GitHub Pages
 
 on:
   push:
@@ -21,17 +21,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
+      - name: Check committed build
+        run: |
+          test -s dist/index.html
+          test -d dist/assets
+          test -f dist/.nojekyll
+          if grep -qi 'http-equiv="refresh"' dist/index.html; then
+            echo "dist/index.html must contain the app, not a redirect."
+            exit 1
+          fi
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build static site
-        run: npm run build:pages
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

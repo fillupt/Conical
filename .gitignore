@@ -6,4 +6,3 @@ node_modules/
 .grok/
 .vercel/
 public/__grok/
-dist/

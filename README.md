@@ -51,9 +51,19 @@ This creates a Pages-ready static bundle in `dist/` and writes a `.nojekyll` fil
 
 The project is configured as a static SPA. It uses relative asset paths and hash-based routing so it works correctly from a repository subpath on GitHub Pages.
 
-The repo includes a GitHub Actions workflow that builds and deploys the generated `dist/` output automatically. The deployed artifact serves the app directly from `dist/index.html`.
+The GitHub Actions workflow deploys the committed `dist/` output without installing npm dependencies or building on GitHub. Keep Settings > Pages > Source set to GitHub Actions.
 
-Publish the generated `dist/` folder via GitHub Actions or by uploading it directly as the Pages artifact.
+Before each release, build and preview locally:
+
+```bash
+npm install
+npm run build:pages
+npm run preview
+```
+
+After verifying the preview, commit the source changes, updated lockfile, and the entire `dist/` folder, including `dist/assets/`. Push to `main` to deploy. Rebuild and commit `dist/` whenever the app changes.
+
+The contents of `dist/` are published at `/Conical/`; do not redirect visitors to `/dist/`.
 
 ## Project notes
 
