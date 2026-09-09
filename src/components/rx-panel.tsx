@@ -29,7 +29,7 @@ export function RxPanel({ which }: { which: Which }) {
     <section className="rounded-xl bg-surface p-4 shadow-[var(--shadow-border)]">
       <header className="mb-3 flex items-center justify-between gap-2">
         <h2 className="font-serif text-lg tracking-tight">
-          {which === "patient" ? "Patient" : "Correction"}
+          {which === "patient" ? "Patient refractive error" : "Current lenses"}
         </h2>
         {isCorrection ? (
           <div className="flex gap-1">
@@ -40,9 +40,7 @@ export function RxPanel({ which }: { which: Which }) {
               Match patient
             </Button>
           </div>
-        ) : (
-          <span className="text-xs text-subtle">True refractive error</span>
-        )}
+        ) : null}
       </header>
 
       <div className="flex items-stretch gap-1 sm:gap-2">
@@ -83,19 +81,6 @@ export function RxPanel({ which }: { which: Which }) {
           onChange={(a) => setAxis(which, a)}
           disabled={false}
         />
-        <div className="mt-1 flex justify-center gap-1">
-          {([-5, -1, 1, 5] as const).map((d) => (
-            <Button
-              key={d}
-              size="sm"
-              variant="ghost"
-              className="min-w-11 font-mono tabular-nums"
-              onClick={() => setAxis(which, rx.axis + d)}
-            >
-              {d > 0 ? `+${d}` : d}°
-            </Button>
-          ))}
-        </div>
       </div>
     </section>
   );

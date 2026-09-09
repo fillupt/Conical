@@ -237,8 +237,8 @@ export function formatRx(rx: Rx, digits = 2): string {
   return `${formatD(rx.sphere, digits)}  /  ${formatD(rx.cylinder, digits)}  ×  ${padAxis(rx.axis)}`;
 }
 
-export const SPHERE_MIN = -15;
-export const SPHERE_MAX = 15;
-export const CYL_MIN = -8;
-export const CYL_MAX = 8;
+export const SPHERE_MIN = -10;
+export const SPHERE_MAX = 10;
+export const CYL_MIN = -6;
+export const CYL_MAX = 6;
 export const JCC_POWERS = [0.25, 0.5, 0.75, 1] as const;
