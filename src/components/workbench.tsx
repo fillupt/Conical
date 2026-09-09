@@ -1,3 +1,5 @@
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 import { Guide } from "@/components/guide";
 import { JccPanel } from "@/components/jcc-panel";
 import { PatientView } from "@/components/patient-view";
@@ -6,14 +8,7 @@ import { RxPanel } from "@/components/rx-panel";
 import { RxText } from "@/components/stepper";
 import { SturmDiagram } from "@/components/sturm-diagram";
 import { Button } from "@/components/ui/button";
-import {
-  classifyResidual,
-  cylRule,
-  formatD,
-  jccRx,
-  residualRx,
-  sphericalEquivalent,
-} from "@/lib/optics";
+import { jccRx, residualRx } from "@/lib/optics";
 import { PRESETS, useWorkbench } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +20,7 @@ export function Workbench() {
   const jccFlip = useWorkbench((s) => s.jccFlip);
   const activePreset = useWorkbench((s) => s.activePreset);
   const applyPreset = useWorkbench((s) => s.applyPreset);
+  const [showPatientView, setShowPatientView] = useState(false);
 
   const jcc = jccRx(correction.axis, jccMode, jccPower, jccFlip);
   const residual = residualRx(patient, correction, jcc);
@@ -36,9 +32,6 @@ export function Workbench() {
           correction,
           jccRx(correction.axis, jccMode, jccPower, jccFlip === 0 ? 1 : 0),
         );
-  const rule = cylRule(residual);
-  const kind = classifyResidual(residual);
-  const se = sphericalEquivalent(residual);
 
   return (
     <div className="min-h-dvh bg-bg text-fg">
@@ -62,77 +55,6 @@ export function Workbench() {
       </header>
 
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-6">
-        <p className="mb-4 hidden max-w-2xl text-sm text-muted sm:block">
-          Set the script first, then scroll to the cross cylinder. Flip it while
-          watching the conoid and the sine wave.
-        </p>
-
-        <section className="mb-4 grid gap-4 lg:grid-cols-3">
-          <RxPanel which="patient" />
-          <RxPanel which="correction" />
-          <section className="rounded-xl bg-surface p-4 shadow-[var(--shadow-border)]">
-            <header className="mb-4">
-              <h2 className="font-serif text-lg tracking-tight">Residual</h2>
-              <p className="mt-1 text-xs text-subtle">
-                Patient minus trial lens minus JCC
-              </p>
-            </header>
-            <p className="text-xl tracking-tight sm:text-2xl">
-              <RxText {...residual} />
-            </p>
-            <p className="mt-2 text-sm text-accent">{kind}</p>
-            <dl className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
-              <div>
-                <dt className="text-subtle">Spherical equivalent</dt>
-                <dd
-                  className={cn(
-                    "font-mono tabular-nums",
-                    se < -0.001 && "text-plus",
-                  )}
-                >
-                  {formatD(se)} D
-                </dd>
-              </div>
-              <div>
-                <dt className="text-subtle">Rule</dt>
-                <dd className="font-mono tabular-nums">{rule ?? "—"}</dd>
-              </div>
-              <div className="col-span-2">
-                <dt className="text-subtle">Patient</dt>
-                <dd>
-                  <RxText {...patient} />
-                </dd>
-              </div>
-              <div className="col-span-2">
-                <dt className="text-subtle">Trial lens</dt>
-                <dd>
-                  <RxText {...correction} />
-                </dd>
-              </div>
-              <div className="col-span-2">
-                <dt className="text-subtle">JCC</dt>
-                <dd>
-                  {jcc ? <RxText {...jcc} /> : "out"}
-                </dd>
-              </div>
-            </dl>
-          </section>
-        </section>
-
-        <div className="sticky top-[3.75rem] z-10 mb-4 bg-bg/95 py-1 sm:top-[4.25rem]">
-          <JccPanel />
-        </div>
-
-        <div className="mb-4 flex flex-col gap-4">
-          <SturmDiagram residual={residual} />
-          <PowerWave
-            residual={residual}
-            alt={alt}
-            trialAxis={correction.axis}
-          />
-          <PatientView residual={residual} />
-        </div>
-
         <section className="mb-4 rounded-xl bg-surface p-4 shadow-[var(--shadow-border)]">
           <h2 className="mb-3 font-serif text-lg tracking-tight">Cases</h2>
           <div className="flex flex-wrap gap-1.5">
@@ -149,6 +71,49 @@ export function Workbench() {
             ))}
           </div>
         </section>
+
+        <section className="mb-4 grid gap-4 lg:grid-cols-2">
+          <RxPanel which="patient" />
+          <RxPanel which="correction" />
+        </section>
+
+        <div className="sticky top-[3.75rem] z-10 mb-4 bg-bg/95 py-1 sm:top-[4.25rem]">
+          <JccPanel />
+        </div>
+
+        <div className="mb-4 grid gap-4 xl:grid-cols-2">
+          <SturmDiagram residual={residual} />
+          <PowerWave
+            residual={residual}
+            alt={alt}
+            trialAxis={correction.axis}
+          />
+        </div>
+
+        <section className="mb-4 rounded-xl bg-surface shadow-[var(--shadow-border)]">
+          <button
+            type="button"
+            className="flex w-full items-center justify-between gap-3 p-4 text-left"
+            aria-expanded={showPatientView}
+            onClick={() => setShowPatientView(!showPatientView)}
+          >
+            <span className="font-serif text-lg tracking-tight">
+              Show patient view
+            </span>
+            <ChevronDown
+              className={cn(
+                "size-5 text-muted transition-transform duration-200 ease-smooth-out",
+                showPatientView && "rotate-180",
+              )}
+            />
+          </button>
+          {showPatientView ? (
+            <div className="border-t border-border p-4 pt-3">
+              <PatientView residual={residual} />
+            </div>
+          ) : null}
+        </section>
+
         <Guide />
       </div>
     </div>
