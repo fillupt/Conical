@@ -74,12 +74,11 @@ export function Workbench() {
 
         <section className="mb-4 grid gap-4 lg:grid-cols-2">
           <RxPanel which="patient" />
-          <RxPanel which="correction" />
+          <div className="flex flex-col gap-4">
+            <RxPanel which="correction" />
+            <JccPanel />
+          </div>
         </section>
-
-        <div className="sticky top-[3.75rem] z-10 mb-4 bg-bg/95 py-1 sm:top-[4.25rem]">
-          <JccPanel />
-        </div>
 
         <div className="mb-4 grid gap-4 xl:grid-cols-2">
           <SturmDiagram residual={residual} />
