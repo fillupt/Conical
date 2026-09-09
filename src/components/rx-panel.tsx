@@ -8,6 +8,7 @@ import {
   SPHERE_MIN,
   formatD,
   padAxis,
+  plusMeridian,
 } from "@/lib/optics";
 import { useWorkbench } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -21,9 +22,15 @@ export function RxPanel({ which }: { which: Which }) {
   const setAxis = useWorkbench((s) => s.setAxis);
   const matchPatient = useWorkbench((s) => s.matchPatient);
   const zeroCorrection = useWorkbench((s) => s.zeroCorrection);
+  const jccMode = useWorkbench((s) => s.jccMode);
+  const jccFlip = useWorkbench((s) => s.jccFlip);
 
   const cylUnused = Math.abs(rx.cylinder) < 0.01;
   const isCorrection = which === "correction";
+  const jccOverlay =
+    isCorrection && jccMode !== "off"
+      ? { plus: plusMeridian(rx.axis, jccMode, jccFlip) }
+      : null;
 
   return (
     <section className="rounded-xl bg-surface p-4 shadow-[var(--shadow-border)]">
@@ -80,8 +87,21 @@ export function RxPanel({ which }: { which: Which }) {
           axis={rx.axis}
           onChange={(a) => setAxis(which, a)}
           disabled={false}
+          jcc={jccOverlay}
         />
       </div>
+      {jccOverlay ? (
+        <p className="mt-2 flex items-center justify-center gap-3 text-xs text-subtle">
+          <span className="flex items-center gap-1">
+            <span className="inline-block size-2 rounded-full bg-plus" />
+            plus {padAxis(jccOverlay.plus)}°
+          </span>
+          <span className="flex items-center gap-1">
+            <span className="inline-block size-2 rounded-full border border-border bg-[var(--color-minus-mark)]" />
+            minus {padAxis(jccOverlay.plus + 90)}°
+          </span>
+        </p>
+      ) : null}
     </section>
   );
 }
